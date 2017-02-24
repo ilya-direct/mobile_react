@@ -1,7 +1,18 @@
 import React from 'react';
-
+import MyDispatcher from '../MyDispatcher';
 
 export default class DeviceView extends React.Component {
+
+    componentWillMount() {
+        MyDispatcher.dispatch({
+            'type' : 'CHANGE_BREADCRUMB',
+            'name' : 'deviceView',
+            'properties': {
+                id: this.props.id,
+                name: 'A3',
+            }
+        })
+    }
 
     render() {
 

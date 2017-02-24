@@ -21,6 +21,7 @@ class Header extends React.Component {
     updateState(object) {
         switch (object.type) {
             case 'LOGIN':
+            case 'LOGOUT':
                 this.setState({
                     guest: Http.isGuest(),
                     user: Http.getCurrentUser(),

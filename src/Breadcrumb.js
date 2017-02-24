@@ -4,6 +4,18 @@ import MyDispatcher from './MyDispatcher';
 
 class Breadcrumb extends Component {
 
+    items = {
+        home: {url: '/', value: 'Главная', key: 1},
+        login: {url: '/login', value: 'Авторизация', key: 2},
+        devices: {url: '/devices', value: 'Устройства', key: 3},
+        deviceView: {key: 4},
+    };
+
+
+
+
+
+
     constructor(props) {
         super(props);
 
@@ -34,27 +46,42 @@ class Breadcrumb extends Component {
     render() {
         return (
             <ul className="breadcrumb">
-                { this.templates(this.state.name) }
+                { this.templates(this.state.name, this.state.properties) }
             </ul>
         )
     }
 
-
-    templates(name) {
-        let ret = [];
-        ret.push(
-            <li key="1"><Link to="/" activeClassName={'active'}>Главная</Link></li>
-        );
-
-        if (name === 'login') {
-            ret.push(<li key="2"><Link to="login" activeClassName={'active'}>Авторизация</Link></li>);
-
+    renderLi(obj, active = false) {
+        if (active) {
+            return (<li key={obj.key} className="active">{obj.value}</li>);
         }
-
+        return (<li key={obj.key}><Link to={obj.url} activeClassName={'active'}>{obj.value}</Link></li>);
+    }
+    templates(name, props) {
+        if (!this.items[name]) {
+            return;
+        }
+        let ret = [];
+        switch (name) {
+            case 'home':
+                ret.push(this.renderLi(this.items['home'], true));
+                break;
+            case 'deviceView':
+                ret.push(this.renderLi(this.items['home']));
+                ret.push(this.renderLi(this.items['devices']));
+                ret.push(<li key={this.items[name].key}>{props.name}</li>);
+                break;
+            default:
+                ret.push(this.renderLi(this.items['home']));
+                ret.push(this.renderLi(this.items[name], true));
+        }
 
         return ret;
 
+
+
     }
 }
+
 
 export default Breadcrumb;

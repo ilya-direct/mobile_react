@@ -35,22 +35,31 @@ class Login extends React.Component {
 
         e.preventDefault();
 
+        let form = $(e.target);
+        let data = {
+            username:  form.find('input[name=username]')[0].value,
+            password:  form.find('input[name=password]')[0].value,
+        };
         // $.post('http://api.mobile.dev/v1/tokens', {username: username, password : password})
-        $.post('http://api.mobile.dev/v1/tokens', $(e.target).serialize())
-            .fail((error) => {
+        Http.post({
+            url: '/tokens',
+            data: JSON.stringify(data),
+            error: (error) => {
                 console.log(error);
                 this.setState({serverValidation: false});
 
-            })
-            .done((data) => {
+            },
+            success: (data) => {
                 console.log(data);
                 Http.login(data.value, data.user);
                 MyDispatcher.dispatch({
                     type: 'LOGIN',
                 });
                 console.log(this.props.router);
-                this.props.router.push('/');
-            });
+
+                this.props.router.push(Http.getBackUrl());
+            }
+        }, this);
 
     }
 
