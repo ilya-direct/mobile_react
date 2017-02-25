@@ -36,8 +36,9 @@ class Login extends React.Component {
         e.preventDefault();
 
         let form = $(e.target);
+        window.form = form;
         let data = {
-            username:  form.find('input[name=username]')[0].value,
+            username:  form.find('input[name=username]').get(0).value,
             password:  form.find('input[name=password]')[0].value,
         };
         // $.post('http://api.mobile.dev/v1/tokens', {username: username, password : password})
