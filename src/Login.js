@@ -3,10 +3,10 @@ import './App.css';
 import $ from 'jquery';
 import Http from './helpers/Http';
 import MyDispatcher from './MyDispatcher';
+import {connect} from 'react-redux';
 
 
 class Login extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -17,24 +17,19 @@ class Login extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        // console.log(this.props.rand); dfasdfasdfsadf df
     }
 
 
     componentWillMount() {
-        this.props.setBreadcrumb('login');
-        MyDispatcher.dispatch({
+        this.props.dispatch({
             type: 'CHANGE_BREADCRUMB',
-            name: 'login',
+            payload: {name: 'login'}
         });
-
-        // dfd df/ d
     }
 
     handleSubmit(e) {
 
         e.preventDefault();
-
         let form = $(e.target);
         window.form = form;
         let data = {
@@ -121,4 +116,4 @@ class Login extends React.Component {
 }
 
 
-export default Login;
+export default connect()(Login);

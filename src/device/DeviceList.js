@@ -1,21 +1,17 @@
 import React, {Component} from 'react';
 import Http from '../helpers/Http';
 import {Link} from 'react-router';
-import MyDispatcher from '../MyDispatcher';
+import {connect} from 'react-redux';
 
-export default class DeviceList extends Component {
+class DeviceList extends Component {
 
     componentWillMount() {
-        MyDispatcher.dispatch({
-            'type' : 'CHANGE_BREADCRUMB',
-            'name' : 'devices',
-        });
-
+        this.props.changeBreadcrumb();
         this.setState({loading: true});
         Http.get({
             url: '/devices',
             success: (data) => {
-                console.log(data);
+                // console.log(data);
 
                 this.setState({
                     loading: false,
@@ -30,7 +26,7 @@ export default class DeviceList extends Component {
             <div className="device-index">
                 <h1>Устройства</h1>
                 <p>
-                    <a className="btn btn-success" href="/content/device/create">Добавить устройство</a></p>
+                    <Link className="btn btn-success" to="/devices/create">Добавить устройство</Link></p>
                 <div id="w0" className="grid-view">
                     <div className="summary">Показаны записи <b>1-40</b> из <b>40</b>.</div>
                     <table className="table table-striped table-bordered">
@@ -38,8 +34,7 @@ export default class DeviceList extends Component {
                         <tr>
                             <th>#</th>
                             <th>ID</th>
-                            <th><a className="asc" href="/content/device/index?sort=-name"
-                                   data-sort="-name">Название</a></th>
+                            <th>Название</th>
                             <th>Название категории</th>
                             <th>Название производителя</th>
                             <th>Активен</th>
@@ -67,10 +62,10 @@ export default class DeviceList extends Component {
                                                           aria-label="Просмотр"
                                                           data-pjax="0"><span
                                                         className="glyphicon glyphicon-eye-open"></span></Link>
-                                                    <a href="/content/device/update?id=28" title="Редактировать"
+                                                    <Link to={'/devices/update/' + device.id} title="Редактировать"
                                                        aria-label="Редактировать"
                                                        data-pjax="0"><span
-                                                        className="glyphicon glyphicon-pencil"></span></a>
+                                                        className="glyphicon glyphicon-pencil"></span></Link>
                                                     <a href="/content/device/delete?id=28" title="Удалить"
                                                        aria-label="Удалить"
                                                        data-confirm="Вы уверены, что хотите удалить этот элемент?"
@@ -90,3 +85,18 @@ export default class DeviceList extends Component {
         )
     }
 }
+
+
+
+
+export default connect(null,
+    (dispatch) => {
+        return {
+            changeBreadcrumb: () => dispatch({
+                'type' : 'CHANGE_BREADCRUMB',
+                'payload': {
+                    'name' : 'devices'
+                },
+            }),
+        }
+})(DeviceList);

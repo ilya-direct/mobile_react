@@ -1,41 +1,17 @@
 import React from 'react';
-// import './App.css';
-// import $ from 'jquery';
-import emitter from 'event-emitter';
-import MyDispatcher from './MyDispatcher';
 import {Link} from 'react-router';
+import {connect} from 'react-redux';
 
 class Home extends React.Component {
 
-    e;
-
-    constructor(props) {
-        super(props);
-        let e = emitter({});
-        e.on('test', function () {
-            console.log('test event');
-        });
-    }
-
     componentWillMount() {
-        this.props.setBreadcrumb('Home');
-        MyDispatcher.dispatch({
+        this.props.dispatch({
             type : 'CHANGE_BREADCRUMB',
-            name: 'home',
+            payload: {name: 'home'}
         });
-    }
-
-
-    componentDidMount() {
-
-
-
-        // this.props.router.push('/login');
     }
 
     render() {
-        let e = emitter({});
-        e.emit('test');
         return (
             <div className="site-index">
                 <div className="body-content">
@@ -94,4 +70,4 @@ class Home extends React.Component {
     }
 }
 
-export default Home;
+export default connect()(Home);

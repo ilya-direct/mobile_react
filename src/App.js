@@ -6,7 +6,6 @@ import './bootstrap/Bootstrap.css';
 import emitter from 'event-emitter';
 import Breadcrumb from './Breadcrumb';
 
-
 class App extends Component {
     // todo;
 
@@ -14,14 +13,12 @@ class App extends Component {
 
     constructor(props) {
         super(props);
-
-
-
-        localStorage.setItem('todos', 'ccc');
         this.state = {
             breadcrumb : {'name' : ''},
             rand: '34234342000',
         };
+
+
 
         this.setBreadcrumbFunc = this.setBreadcrumbFunc.bind(this);
 

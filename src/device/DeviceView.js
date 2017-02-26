@@ -1,8 +1,8 @@
 import React from 'react';
-import MyDispatcher from '../MyDispatcher';
 import Http from '../helpers/Http';
+import {connect} from 'react-redux';
 
-export default class DeviceView extends React.Component {
+class DeviceView extends React.Component {
 
     constructor(props) {
         super(props);
@@ -16,14 +16,7 @@ export default class DeviceView extends React.Component {
         Http.get({
             url: '/devices/' + this.props.params.id,
             success: (data) => {
-                MyDispatcher.dispatch({
-                    'type': 'CHANGE_BREADCRUMB',
-                    'name': 'deviceView',
-                    'properties': {
-                        id: this.props.id,
-                        name: data.name,
-                    }
-                });
+                this.props.changeBreadcrumb('deviceView',{id: this.props.id, name: data.name});
                 this.setState({
                     loaded: true,
                     device: data,
@@ -92,3 +85,18 @@ export default class DeviceView extends React.Component {
 
     }
 }
+
+export default connect(null,
+    (dispatch) => {
+        return {
+            changeBreadcrumb: (name, properties) => {
+                dispatch({
+                    'type' : 'CHANGE_BREADCRUMB',
+                    'payload': {
+                        'name' : name,
+                        properties,
+                    },
+                });
+            },
+        }
+    })(DeviceView);

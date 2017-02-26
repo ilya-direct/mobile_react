@@ -7,18 +7,25 @@ import Device from './device/Device';
 import DeviceList from './device/DeviceList';
 import {Router, browserHistory, Route, IndexRoute} from 'react-router';
 import DeviceView from "./device/DeviceView";
+import DeviceEdit from "./device/DeviceEdit";
+import {Provider} from "react-redux";
+import Store from  './Store';
 
 ReactDOM.render(
-    <Router history={ browserHistory }>
-        <Route  path="/" component={App}>
-            <IndexRoute component={Home}/>
-            <Route path='home' component={Home}/>
-            <Route path='login' component={Login} />
-            <Route path='devices' component={Device}>
-                <IndexRoute component={DeviceList}/>
-                <Route path='view/:id' component={DeviceView}/>
+    <Provider store={Store}>
+        <Router history={ browserHistory }>
+            <Route path="/" component={App}>
+                <IndexRoute component={Home}/>
+                <Route path='home' component={Home}/>
+                <Route path='login' component={Login}/>
+                <Route path='devices' component={Device}>
+                    <IndexRoute component={DeviceList}/>
+                    <Route path='view/:id' component={DeviceView}/>
+                    <Route path='update/:id' component={DeviceEdit}/>
+                    <Route path='create' component={DeviceEdit}/>
+                </Route>
             </Route>
-        </Route>
-    </Router>,
-  document.getElementById('root')
+        </Router>
+    </Provider>,
+    document.getElementById('root')
 );
