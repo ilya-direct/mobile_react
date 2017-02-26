@@ -41,6 +41,8 @@ class Http
             success: obj.success,
             data: obj.data,
             dataType: 'json',
+            processData: obj.processData,
+            contentType: obj.contentType,
             error: (err) => {
                 console.log(err);
                 if (err.status === 401) {

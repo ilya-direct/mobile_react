@@ -1,5 +1,6 @@
 import React from 'react'
 import {Field, reduxForm} from 'redux-form'
+import Dropzone  from 'react-dropzone'
 
 const required = value => value ? undefined : 'Required'
 const maxLength = max => value =>
@@ -17,6 +18,9 @@ const renderField = ({input, label, type, meta: {touched, error, warning}}) => {
     let inputItem = '';
     input.className = "form-control"
     switch (type) {
+        case 'file':
+            inputItem = <input type="file" className="form-control" {...input} />
+            break;
         case 'text':
             inputItem = <input className="form-control" {...input} />
             break;
@@ -26,23 +30,34 @@ const renderField = ({input, label, type, meta: {touched, error, warning}}) => {
             //no default
     }
     return (
-
-
         <div className="form-group">
             <label className="control-label" htmlFor={'device-' + input.name}>{label}</label>
             {inputItem}
-
             <div className="help-block"></div>
-
         </div>
-
     )
 }
 
+const DropZoneStyle = {
+    'borderWidth': '2px',
+    'borderColor': 'black',
+    'borderStyle': 'dashed',
+    'borderRadius': '4px',
+    'margin': '30px',
+    'padding': '30px',
+    'width': '200px',
+    'transition': 'all 0.5s',
+}
+
+
 const FieldLevelValidationForm = (props) => {
     const {handleSubmit, pristine, reset, submitting} = props
-    console.log('action: -> ', props.action);
-    console.log('submit: -> ', handleSubmit);
+    // console.log('action: -> ', props.action);
+    // console.log('submit: -> ', handleSubmit);
+    // this.change('DeviceForm', 'name', 'Diana');
+    /*if (props.image) {
+        props.change('image', props.image.preview);
+    }*/
     return (
         <form onSubmit={handleSubmit}>
             <Field name="name" type="text" label="Название"
@@ -59,6 +74,10 @@ const FieldLevelValidationForm = (props) => {
                    validate={[required]}
                    warn={tooOld}
             />
+            <Dropzone onDrop={props.onDrop} style={DropZoneStyle}>
+                <div>Try dropping some files here, or click to select files to upload.</div>
+            </Dropzone>
+            {props.image ? (<img src={props.image.preview} style={{maxWidth: '300px', maxHeight: '500px'}}/>) : ''}
             <div className="form-group">
                 <button type="submit" className="btn btn-primary" disabled={submitting}>Сохранить</button>
                 <span style={{padding:'0 10px'}}></span>
