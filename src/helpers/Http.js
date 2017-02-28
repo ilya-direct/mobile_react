@@ -1,8 +1,13 @@
 import $ from 'jquery';
-import MyDispatcher from '../MyDispatcher';
+import store from '../Store';
+import LocalStorage from './LocalStorage';
 
 class Http {
     static host = 'http://api.mobile.dev/v1';
+
+    static getBaseUrl() {
+        return 'http://api.mobile.dev/v1';
+    }
 
     static getHeaders() {
         let headers = {
@@ -50,7 +55,7 @@ class Http {
                 if (err.status === 401) {
                     Http.logout();
                     Http.setBackUrl(self.props.location.pathname);
-                    MyDispatcher.dispatch({
+                    store.dispatch({
                         type: 'LOGOUT',
                     });
                     self.props.router.push('/login');
@@ -72,21 +77,17 @@ class Http {
 
     static isGuest() {
 
-        return !localStorage.getItem('token');
+        return LocalStorage.isGuest();
     }
 
     static getCurrentUser() {
-        let user = null;
-        if (!Http.isGuest()) {
-            user = JSON.parse(localStorage.getItem('user'))
-        }
 
-        return user;
+        return LocalStorage.getCurrentUser();
     }
 
     static getToken() {
-        return localStorage.getItem('token');
 
+        return LocalStorage.getToken();
     }
 
     static setBackUrl(url) {

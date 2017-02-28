@@ -1,53 +1,19 @@
 import React from "react";
 import {Link} from 'react-router';
 import Http from './helpers/Http';
-import MyDispatcher from './MyDispatcher';
+import {connect} from 'react-redux'
 
 class Header extends React.Component {
 
     constructor(props) {
         super(props);
         this.logout = this.logout.bind(this);
-        this.state = {
-            guest: Http.isGuest(),
-            user: Http.getCurrentUser(),
-        };
-    }
-
-    componentWillMount() {
-        MyDispatcher.register(this.updateState.bind(this));
-    }
-
-    updateState(object) {
-        switch (object.type) {
-            case 'LOGIN':
-            case 'LOGOUT':
-                this.setState({
-                    guest: Http.isGuest(),
-                    user: Http.getCurrentUser(),
-                });
-                break;
-            //no default
-        }
     }
 
     logout(e) {
-        console.log('logout');
         Http.logout();
-        this.setState({
-            guest: true,
-            user: null,
-        });
-
-        console.log(this.props.router);
-
+        this.props.logout();
         this.props.router.push('/login');
-
-
-        // dfdsf
-
-
-
     }
 
 
@@ -66,11 +32,11 @@ class Header extends React.Component {
                             <a className="navbar-brand" href="/">Мобильная лаборатория</a></div>
                         <div id="w1-collapse" className="collapse navbar-collapse">
                             <ul id="w2" className="navbar-nav navbar-right nav">
-                                {this.state.guest ?
-                                    (<li><Link to='/login' activeClassName='active'>Войти</Link></li>)
-                                    :
-                                    (<li><a className="active" onClick={this.logout}>{this.state.user.first_name}
+                                {this.props.authenticated ?
+                                    (<li><a className="active" onClick={this.logout}>{this.props.user.first_name}
                                         Выйти</a></li>)
+                                    :
+                                    (<li><Link to='/login' activeClassName='active'>Войти</Link></li>)
                                 }
                             </ul>
                         </div>
@@ -81,6 +47,18 @@ class Header extends React.Component {
     }
 }
 
-export
-default
-Header;
+export default connect(
+    store => {
+        return {
+            authenticated: store.mainMenu.auth,
+            user: store.mainMenu.user
+        }
+    },
+    (dispatch) => {
+        return {
+            logout: () => dispatch({
+                'type' : 'LOGOUT',
+            })
+        }
+    }
+)(Header);

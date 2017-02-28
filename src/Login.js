@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import $ from 'jquery';
 import Http from './helpers/Http';
-import MyDispatcher from './MyDispatcher';
 import {connect} from 'react-redux';
 
 
@@ -48,8 +47,12 @@ class Login extends React.Component {
             success: (data) => {
                 console.log(data);
                 Http.login(data.value, data.user);
-                MyDispatcher.dispatch({
+                this.props.dispatch({
                     type: 'LOGIN',
+                    payload: {
+                        auth: true,
+                        user: data.user,
+                    }
                 });
                 console.log(this.props.router);
 
