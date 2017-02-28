@@ -2,12 +2,12 @@ import  React, {Component} from 'react';
 import  DeviceForm from './DeviceForm';
 import Http from '../helpers/Http';
 import {connect} from 'react-redux';
-import {change} from 'redux-form';
+import {SubmissionError} from 'redux-form';
+import axios from 'axios';
 
 class DeviceEdit extends Component {
 
     initialValues;
-    //dfsfdsfsdfsdfdsfsf
 
     constructor(props) {
         super(props);
@@ -21,18 +21,15 @@ class DeviceEdit extends Component {
         this.setState({
             'file': files[0],
         });
-        change('DeviceForm', 'image', files[0]);
     }
 
     componentWillMount() {
-
         Http.get({
             url: '/devices/' + this.props.params.id, success: (data) => {
                 this.initialValues = {
                     'name': data.name,
                     'description': data.description,
                     'alias': data.alias,
-                    'image': '',
                 };
 
                 this.props.changeBreadcrumb('deviceEdit', {'name': data.name, 'id': data.id});
@@ -40,7 +37,6 @@ class DeviceEdit extends Component {
             }
         })
     }
-
 
     render() {
         return this.state.loaded ? (
@@ -51,7 +47,7 @@ class DeviceEdit extends Component {
                     <DeviceForm
                         action="update"
                         onDrop={this.onDrop.bind(this)}
-                        onSubmit={this.onSubmit.bind(this)}
+                        submitFunc={this.onSubmit.bind(this)}
                         initialValues={this.initialValues}
                         image={this.state.file ? this.state.file : null}
                     />
@@ -62,26 +58,40 @@ class DeviceEdit extends Component {
         )
     }
 
-    onSubmit(e) {
-        console.log('FORMDATA', e);
-        console.log(this.state.file);
+    onSubmit (submittedData) {
 
-        let formData = new FormData();
-        formData.append('image', this.state.file);
-        this.state.file && Http.post({
-            headers: {
-                'Content-Type': undefined,
-            },
-            url: '/devices/image-upload',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: (data) => {
-                console.log(data);
+        let instance = axios.create({
+            baseURL: Http.host,
+            headers: {Authorization: Http.getToken()}
+        });
+
+        let promise = new Promise((resolve) => resolve({}));
+        if (this.state.file) {
+            let formData = new FormData();
+            formData.append('image', this.state.file);
+            promise = instance.post('/devices/image-upload', formData);
+        }
+
+        promise = promise.then((response) => {
+            console.log('device changes', response);
+            if (response && response.data) {
+                submittedData.image_name = response.data.image_name
             }
-        })
+            console.log('submitted response:', submittedData);
+            return instance.put('/devices/' + this.props.params.id, submittedData)
+        }).then((response) => {
+            console.log('device changes succeeded', response.data);
+            this.props.router.push('/devices/view/' + response.data.id)
 
+        }).catch(error => {
+            console.log(error.response.data);
+            throw error;
+        }).catch(e => {
+            console.log(e.response.data);
+            throw new SubmissionError(e.response.data);
+        });
 
+        return promise;
     }
 }
 

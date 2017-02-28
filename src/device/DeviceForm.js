@@ -1,21 +1,22 @@
 import React from 'react'
 import {Field, reduxForm} from 'redux-form'
 import Dropzone  from 'react-dropzone'
+import classNames from 'classnames'
 
 const required = value => value ? undefined : 'Required'
-const maxLength = max => value =>
-
-    value && value.length > max ? `Must be ${max} characters or less` : undefined
-const maxLength15 = maxLength(15)
 const tooOld = value =>
     value && value > 65 ? 'You might be too old for this' : undefined
 const aol = value =>
     value && /.+@aol\.com/.test(value) ?
         'Really? You still use AOL for your email?' : undefined
 
-const renderField = ({input, label, type, meta: {touched, error, warning}}) => {
-    console.log(input);
+const renderField = ({input, label, type, meta: {touched, error, pristine}}) => {
     let inputItem = '';
+    let divClass = classNames({
+        'form-group': true,
+        'has-error': error,
+        'has-success': (!pristine || touched)&& !error
+    });
     input.className = "form-control"
     switch (type) {
         case 'file':
@@ -30,10 +31,10 @@ const renderField = ({input, label, type, meta: {touched, error, warning}}) => {
             //no default
     }
     return (
-        <div className="form-group">
+        <div className={divClass}>
             <label className="control-label" htmlFor={'device-' + input.name}>{label}</label>
             {inputItem}
-            <div className="help-block"></div>
+            <div className="help-block">{error}</div>
         </div>
     )
 }
@@ -49,20 +50,12 @@ const DropZoneStyle = {
     'transition': 'all 0.5s',
 }
 
-
 const FieldLevelValidationForm = (props) => {
-    const {handleSubmit, pristine, reset, submitting} = props
-    // console.log('action: -> ', props.action);
-    // console.log('submit: -> ', handleSubmit);
-    // this.change('DeviceForm', 'name', 'Diana');
-    /*if (props.image) {
-        props.change('image', props.image.preview);
-    }*/
+    const {handleSubmit, pristine, reset, submitting, submitFunc} = props
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(submitFunc)}>
             <Field name="name" type="text" label="Название"
                    component={renderField}
-                   validate={[required, maxLength15]}
             />
             <Field name="alias" type="text" label="Alias (необязательно)"
                    component={renderField}
@@ -75,9 +68,9 @@ const FieldLevelValidationForm = (props) => {
                    warn={tooOld}
             />
             <Dropzone onDrop={props.onDrop} style={DropZoneStyle}>
-                <div>Try dropping some files here, or click to select files to upload.</div>
+                <div>Нажмите или перетащите картинку в выделенную область</div>
             </Dropzone>
-            {props.image ? (<img src={props.image.preview} style={{maxWidth: '300px', maxHeight: '500px'}}/>) : ''}
+            {props.image ? (<img src={props.image.preview} role="presentation" style={{maxWidth: '300px', maxHeight: '500px'}}/>) : ''}
             <div className="form-group">
                 <button type="submit" className="btn btn-primary" disabled={submitting}>Сохранить</button>
                 <span style={{padding:'0 10px'}}></span>

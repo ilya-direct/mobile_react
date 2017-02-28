@@ -1,6 +1,7 @@
 import React from 'react';
 import Http from '../helpers/Http';
 import {connect} from 'react-redux';
+import {Link} from 'react-router';
 
 class DeviceView extends React.Component {
 
@@ -38,7 +39,7 @@ class DeviceView extends React.Component {
                 <div className="device-view">
                     <h1>{ this.state.device.name }</h1>
                     <p>
-                        <a className="btn btn-primary" href="/content/device/update?id=34">Редактировать</a>
+                        <Link className="btn btn-primary" to={'/devices/update/' + this.props.params.id}>Редактировать</Link>
                         <a
                         className="btn btn-danger" href="/content/device/delete?id=34"
                         data-confirm="Вы действительно хотите удалить устройство?" data-method="post">Удалить</a>

@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import MyDispatcher from '../MyDispatcher';
 
 class Http
 {
@@ -30,11 +29,18 @@ class Http
         return Http._ajax(obj, self);
     }
 
+    static put(obj, self)
+    {
+        obj.method = "PUT";
+
+        return Http._ajax(obj, self);
+    }
+
     static _ajax(obj, self)
     {
         let headers = Http.getHeaders();
         headers = Object.assign(headers, obj.headers ? obj.headers : {});
-        $.ajax({
+        return $.ajax({
             url: Http.host + obj.url,
             method: obj.method,
             headers: headers,

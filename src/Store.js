@@ -18,7 +18,6 @@ let breadcrumbReducer = (state = { name: 'home'}, action) => {
 }
 
 let reducer = (state = {}, action) => {
-    console.log(action);
     return state;
 
 }
