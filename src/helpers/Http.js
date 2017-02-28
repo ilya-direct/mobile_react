@@ -1,7 +1,7 @@
 import $ from 'jquery';
+import MyDispatcher from '../MyDispatcher';
 
-class Http
-{
+class Http {
     static host = 'http://api.mobile.dev/v1';
 
     static getHeaders() {
@@ -15,29 +15,25 @@ class Http
         return Object.assign(headers, {Authorization: Http.getToken()});
     }
 
-    static get(obj, self)
-    {
+    static get(obj, self) {
         obj.method = "GET";
 
         return Http._ajax(obj, self);
     }
 
-    static post(obj, self)
-    {
+    static post(obj, self) {
         obj.method = "POST";
 
         return Http._ajax(obj, self);
     }
 
-    static put(obj, self)
-    {
+    static put(obj, self) {
         obj.method = "PUT";
 
         return Http._ajax(obj, self);
     }
 
-    static _ajax(obj, self)
-    {
+    static _ajax(obj, self) {
         let headers = Http.getHeaders();
         headers = Object.assign(headers, obj.headers ? obj.headers : {});
         return $.ajax({
@@ -66,7 +62,7 @@ class Http
     }
 
     static login(token, user) {
-        localStorage.setItem('token', token );
+        localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
     }
 
@@ -92,6 +88,7 @@ class Http
         return localStorage.getItem('token');
 
     }
+
     static setBackUrl(url) {
         localStorage.setItem('backUrl', url);
     }
@@ -101,6 +98,32 @@ class Http
         localStorage.removeItem('backUrl');
 
         return url ? url : '/';
+    }
+
+    static catchUnauthorized(error) {
+        if (error.response) {
+            if (error.response.status === 401) {
+                Http.logout();
+                Http.setBackUrl(this.props.location.pathname);
+                this.props.router.push('/login');
+                return;
+            }
+        }
+
+        throw error;
+    }
+
+    static catchNotFound(error) {
+        if (error.response) {
+            if (error.response.status === 404) {
+                this.setState({
+                    'pageNotFound': true,
+                })
+                return;
+            }
+        }
+
+        throw error;
     }
 }
 

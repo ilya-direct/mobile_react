@@ -4,6 +4,7 @@ import Http from '../helpers/Http';
 import {connect} from 'react-redux';
 import {SubmissionError} from 'redux-form';
 import axios from 'axios';
+import AxiosNew from '../helpers/Axios';
 
 class DeviceEdit extends Component {
 
@@ -24,21 +25,27 @@ class DeviceEdit extends Component {
     }
 
     componentWillMount() {
-        Http.get({
-            url: '/devices/' + this.props.params.id, success: (data) => {
+        AxiosNew.get('/devices/' + this.props.params.id)
+             .then(response => {
+                let data = response.data;
                 this.initialValues = {
                     'name': data.name,
-                    'description': data.description,
+                    'description': data.descriptixcon,
                     'alias': data.alias,
                 };
 
                 this.props.changeBreadcrumb('deviceEdit', {'name': data.name, 'id': data.id});
                 this.setState({loaded: true});
-            }
-        })
+             })
+            .catch(Http.catchUnauthorized.bind(this))
+            .catch(Http.catchNotFound.bind(this));
     }
 
     render() {
+        if (this.state.pageNotFound) {
+            return (<div>Страница не найдена</div>)
+        }
+
         return this.state.loaded ? (
             <div className="device-update">
                 <h1>Редактирование устройства: {this.initialValues.name}</h1>

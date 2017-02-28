@@ -12,9 +12,10 @@ const aol = value =>
 
 const renderField = ({input, label, type, meta: {touched, error, pristine}}) => {
     let inputItem = '';
+    let isError = (!pristine || touched) && error;
     let divClass = classNames({
         'form-group': true,
-        'has-error': error,
+        'has-error': isError,
         'has-success': (!pristine || touched)&& !error
     });
     input.className = "form-control"
@@ -34,7 +35,7 @@ const renderField = ({input, label, type, meta: {touched, error, pristine}}) => 
         <div className={divClass}>
             <label className="control-label" htmlFor={'device-' + input.name}>{label}</label>
             {inputItem}
-            <div className="help-block">{error}</div>
+            {isError ? (<div className="help-block">{error}</div>) : ''}
         </div>
     )
 }
