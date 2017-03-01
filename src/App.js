@@ -39,7 +39,7 @@ class App extends Component {
                         <Header  router={this.props.router} />
                         <div className="container">
                             <Breadcrumb router={this.props.router} breadcrumb={ this.state.breadcrumb } />
-                            {React.cloneElement(this.props.children, { setBreadcrumb: this.setBreadcrumbFunc  })}
+                            {this.props.children}
                         </div>
                 </div>
 

@@ -2,10 +2,6 @@ import React, {Component} from "react";
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 
-
-
-
-
 class Breadcrumb extends Component {
 
     items = {
@@ -13,7 +9,8 @@ class Breadcrumb extends Component {
         login: {url: '/login', value: 'Авторизация', key: 2},
         devices: {url: '/devices', value: 'Устройства', key: 3},
         deviceView: {key: 4},
-        deviceEdit: {key: 5, value: 'Редактирование', 'url': '/devices/view/'},
+        deviceEdit: {key: 5, value: 'Редактирование', 'url': '/devices/view'},
+        deviceCreate: {key: 7, value: 'Добавление устройства', 'url': '/devices/create'},
     };
 
     render() {
@@ -56,6 +53,11 @@ class Breadcrumb extends Component {
                 );
                 ret.push(<li key={this.items[name].key}>Редактирование</li>);
                 break;
+            case 'deviceCreate':
+                ret.push(this.renderLi(this.items['home']));
+                ret.push(this.renderLi(this.items['devices']));
+                ret.push(this.renderLi(this.items[name], true));
+                break
             default:
                 ret.push(this.renderLi(this.items['home']));
                 ret.push(this.renderLi(this.items[name], true));

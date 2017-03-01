@@ -73,7 +73,7 @@ class DeviceView extends React.Component {
                         </tr>
                         <tr>
                             <th>Активен</th>
-                            <td>{ this.state.device.enabled }</td>
+                            <td>{ this.state.device.enabled ? 'Да' : 'Нет' }</td>
                         </tr>
                         <tr>
                             <th>Название производителя</th>
