@@ -24,7 +24,7 @@ class Header extends React.Component {
                                 <span className="icon-bar"></span>
                                 <span className="icon-bar"></span>
                                 <span className="icon-bar"></span></button>
-                            <a className="navbar-brand" href="/">Мобильная лаборатория</a></div>
+                            <Link className="navbar-brand" to="/">Мобильная лаборатория</Link></div>
                         <div id="w1-collapse" className="collapse navbar-collapse">
                             <ul id="w2" className="navbar-nav navbar-right nav">
                                 {this.props.authenticated ?

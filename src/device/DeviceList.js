@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Http from '../helpers/Http';
+import axios from '../helpers/Axios'
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 
@@ -19,6 +20,18 @@ class DeviceList extends Component {
                 });
             },
         }, this);
+    }
+
+    deleteDevice(id) {
+        if (confirm('Вы действительно хотите удалить устройство?')) {
+            axios
+                .delete('/devices/' + id)
+                .then((response) => {
+                    this.setState({
+                        devices: this.state.devices.filter(item => item.id !== id)
+                    })
+                })
+        }
     }
 
     render() {
@@ -43,7 +56,8 @@ class DeviceList extends Component {
                         </thead>
                         { this.state.loading ? (<tbody>
                         <tr>
-                            <td colSpan="7">Loading...   <span className="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></td>
+                            <td colSpan="7">Loading... <span
+                                className="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></td>
                         </tr>
                         </tbody>) :
                             (<tbody>
@@ -58,19 +72,15 @@ class DeviceList extends Component {
                                                 <td>{device.vendor ? device.vendor.name : ''}</td>
                                                 <td>{device.enabled ? 'Да' : 'Нет'}</td>
                                                 <td>
-                                                    <Link to={'/devices/view/' + device.id} title="Просмотр"
-                                                          aria-label="Просмотр"
-                                                          data-pjax="0"><span
-                                                        className="glyphicon glyphicon-eye-open"></span></Link>
-                                                    <Link to={'/devices/update/' + device.id} title="Редактировать"
-                                                       aria-label="Редактировать"
-                                                       data-pjax="0"><span
-                                                        className="glyphicon glyphicon-pencil"></span></Link>
-                                                    <a href="/content/device/delete?id=28" title="Удалить"
-                                                       aria-label="Удалить"
-                                                       data-confirm="Вы уверены, что хотите удалить этот элемент?"
-                                                       data-method="post"
-                                                       data-pjax="0"><span className="glyphicon glyphicon-trash"></span></a>
+                                                    <Link to={'/devices/view/' + device.id} title="Просмотр">
+                                                        <span className="glyphicon glyphicon-eye-open"></span>
+                                                    </Link>
+                                                    <Link to={'/devices/update/' + device.id} title="Редактировать">
+                                                        <span className="glyphicon glyphicon-pencil"></span>
+                                                    </Link>
+                                                    <a onClick={this.deleteDevice.bind(this, device.id)} title="Удалить">
+                                                        <span className="glyphicon glyphicon-trash"></span>
+                                                    </a>
                                                 </td>
                                             </tr>
                                         )
@@ -87,16 +97,14 @@ class DeviceList extends Component {
 }
 
 
-
-
 export default connect(null,
     (dispatch) => {
         return {
             changeBreadcrumb: () => dispatch({
-                'type' : 'CHANGE_BREADCRUMB',
+                'type': 'CHANGE_BREADCRUMB',
                 'payload': {
-                    'name' : 'devices'
+                    'name': 'devices'
                 },
             }),
         }
-})(DeviceList);
+    })(DeviceList);
