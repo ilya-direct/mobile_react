@@ -141,9 +141,6 @@ class DeviceForm extends React.Component {
             }).catch(Http.catchUnauthorized.bind(this))
             .catch(e => {
                 console.log(e);
-
-
-
                 throw new SubmissionError(e.response.data);
             });
 
