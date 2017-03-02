@@ -101,13 +101,21 @@ class DeviceForm extends React.Component {
     }
 
     onDrop(files) {
-        // console.log('Received files: ', files);
         this.setState({
             'file': files[0],
         });
     }
 
+    onRemoveImage() {
+        this.setState({
+            'file' : undefined,
+            'imageUrl': undefined,
+            'imageDeleted': true,
+        })
+    }
+
     onSubmit(submittedData) {
+        // console.log('submitted response:', submittedData);
         let promise = new Promise((resolve) => resolve({}));
         if (this.state.file) {
             let formData = new FormData();
@@ -119,8 +127,9 @@ class DeviceForm extends React.Component {
             .then((response) => {
                 if (response && response.data) {
                     submittedData.image_name = response.data.image_name
+                } else if (this.state.imageDeleted) {
+                    submittedData.image_name = null;
                 }
-                console.log('submitted response:', submittedData);
                 let promise;
                 switch (this.props.action) {
                     case ACTION_UPDATE:
@@ -135,9 +144,7 @@ class DeviceForm extends React.Component {
 
                 return promise;
             }).then((response) => {
-                console.log('device changes succeeded', response.data);
                 this.props.router.push('/devices/view/' + response.data.id)
-
             }).catch(Http.catchUnauthorized.bind(this))
             .catch(e => {
                 console.log(e);
@@ -174,7 +181,11 @@ class DeviceForm extends React.Component {
                     <Dropzone onDrop={this.onDrop.bind(this)} style={DropZoneStyle}>
                         <div>Нажмите или перетащите картинку в выделенную область</div>
                     </Dropzone>
-                    {imageUrl ? (<img src={imageUrl} role="presentation" style={{maxWidth: '300px', maxHeight: '500px'}}/>) : ''}
+                    {imageUrl ? (
+                        <span style={{display: 'inline-block'}}>
+                            <img src={imageUrl} role="presentation" style={{maxWidth: '300px', maxHeight: '500px'}}/>
+                            <div onClick={this.onRemoveImage.bind(this)} className="remove-image-button">Удалить</div>
+                        </span>) : ''}
                 </div>
                 <div className="form-group">
                     <button type="submit" className="btn btn-primary" disabled={submitting}>Сохранить</button>

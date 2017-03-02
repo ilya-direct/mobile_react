@@ -119,5 +119,15 @@ a.desc:after {
 }
 
 
+.remove-image-button {
+  background: #444;
+  border: 1px solid black;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+}
 
-
+.remove-image-button:hover {
+  background: white;
+  color: black;
+}
