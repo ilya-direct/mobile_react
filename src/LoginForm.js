@@ -41,7 +41,7 @@ class LoginForm extends Component {
                        validate={[required]}
                 />
                 <div className="form-group">
-                    <button type="submit" className="btn btn-primary" disabled={submitting}>Сохранить</button>
+                    <button type="submit" className="btn btn-primary" disabled={submitting}>Войти</button>
                 </div>
             </form>
         )
