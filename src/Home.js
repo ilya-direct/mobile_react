@@ -1,14 +1,12 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
+import {changeBreadcrumb} from './Actions';
 
 class Home extends React.Component {
 
     componentWillMount() {
-        this.props.dispatch({
-            type : 'CHANGE_BREADCRUMB',
-            payload: {name: 'home'}
-        });
+        this.props.dispatch(changeBreadcrumb('home'));
     }
 
     render() {

@@ -32,9 +32,6 @@ const renderField = ({input, label, type, options, meta: {touched, error, pristi
     });
 
     switch (type) {
-        case 'file':
-            inputItem = <input type="file" className="form-control" {...input} />
-            break;
         case 'text':
             inputItem = <input className="form-control" {...input} />
             break;
@@ -120,7 +117,6 @@ class DeviceForm extends React.Component {
 
         promise = promise
             .then((response) => {
-                console.log(this.props);
                 if (response && response.data) {
                     submittedData.image_name = response.data.image_name
                 }
@@ -155,7 +151,6 @@ class DeviceForm extends React.Component {
     }
 
     render() {
-        console.log(this.state);
         const {handleSubmit, pristine, reset, submitting} = this.props
 
 

@@ -32,7 +32,6 @@ class DeviceView extends React.Component {
 
         // Query params
         // console.log(this.props.location.query);
-        console.log(this.props);
         return !this.state.loaded ?
             (<p>Loading... <span className="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span></p>)
             : (

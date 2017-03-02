@@ -2,20 +2,15 @@ import React from "react";
 import {Link} from 'react-router';
 import Http from './helpers/Http';
 import {connect} from 'react-redux'
+import {logout} from './Actions'
 
 class Header extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.logout = this.logout.bind(this);
-    }
-
     logout(e) {
         Http.logout();
-        this.props.logout();
+        this.props.dispatch(logout());
         this.props.router.push('/login');
     }
-
 
     render() {
         return (
@@ -33,8 +28,7 @@ class Header extends React.Component {
                         <div id="w1-collapse" className="collapse navbar-collapse">
                             <ul id="w2" className="navbar-nav navbar-right nav">
                                 {this.props.authenticated ?
-                                    (<li><a className="active" onClick={this.logout}>{this.props.user.first_name}
-                                        Выйти</a></li>)
+                                    (<li><a className="active" onClick={this.logout.bind(this)}>{this.props.user.first_name} Выйти</a></li>)
                                     :
                                     (<li><Link to='/login' activeClassName='active'>Войти</Link></li>)
                                 }
@@ -52,13 +46,6 @@ export default connect(
         return {
             authenticated: store.mainMenu.auth,
             user: store.mainMenu.user
-        }
-    },
-    (dispatch) => {
-        return {
-            logout: () => dispatch({
-                'type' : 'LOGOUT',
-            })
         }
     }
 )(Header);
