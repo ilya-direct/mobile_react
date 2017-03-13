@@ -1,7 +1,6 @@
 import axios from 'axios';
 import Http from './Http';
 
-
 class NewAxios {
 
     static getInstance() {
