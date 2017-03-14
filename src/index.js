@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, browserHistory} from 'react-router';
+import {Router, hashHistory} from 'react-router';
 import {Provider} from "react-redux";
 import Store from  './Store';
 import routes from './Routes'
 
 ReactDOM.render(
     <Provider store={Store}>
-        <Router history={browserHistory}>
+        <Router history={hashHistory}>
             {routes}
         </Router>
     </Provider>,
